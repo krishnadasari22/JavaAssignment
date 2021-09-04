@@ -1,0 +1,13 @@
+/* You'll want to take the MAX of your transaction date to find the most recent transaction. As this is an aggregate function you'll also want to GROUP BY your cus_id. This result then gives you the latest date for a customer so you can then join the rest of the data against that cus_id and tranc_date combination.*/
+
+
+SELECT cus_tranc.cus_id,
+       cus_tranc.tranc_amt,
+       cus_tranc.tranc_type,
+       cus_tranc.tranc_date
+FROM cus_tranc 
+INNER JOIN (
+  SELECT cus_id,
+         MAX(tranc_date) AS 'tranc_date'
+  FROM cus_tranc
+  GROUP BY cus_id) max_tranc ON cus_tranc.cus_id = max_tranc.cus_id AND cus_tranc.tranc_date = max_tranc.tranc_date;
